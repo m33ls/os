@@ -1,4 +1,13 @@
 
+Test
+```
+rustup override set nightly
+cargo bootimage
+qemu-system-x86_64 -drive format=raw,file=target/x86_64-os/debug/bootimage-os.bin
+```
+
+TODO
+* Rewrite / add UEFI support to bootloader crate
 
 Useful Resources
 * [Creating an Operating System](https://wiki.osdev.org/Creating_an_Operating_System)
