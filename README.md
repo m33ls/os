@@ -9,11 +9,10 @@ cargo bootimage
 ```
 
 Run
-```
-cargo run
+`cargo run`
+
 or
-qemu-system-x86_64 -drive format=raw,file=target/x86_64-os/debug/bootimage-os.bin
-```
+`qemu-system-x86_64 -drive format=raw,file=target/x86_64-os/debug/bootimage-os.bin`
 
 TODO
 * Rewrite / add UEFI support to bootloader crate

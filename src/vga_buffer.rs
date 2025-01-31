@@ -1,23 +1,24 @@
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
+// text mode colour constants
 pub enum Color {
-    Black      = 0x0,
-    Blue       = 0x1,
-    Green      = 0x2,
-    Cyan       = 0x3,
-    Red        = 0x4,
-    Magenta    = 0x5,
-    Brown      = 0x6,
-    LightGray  = 0x7,
-    DarkGray   = 0x8,
-    LightBlue  = 0x9,
-    LightGreen = 0xa,
-    LightCyan  = 0xb,
-    LightRed   = 0xc,
-    Pink       = 0xd,
-    Yellow     = 0xe,
-    White      = 0xf
+    Black      = 0, 
+    Blue       = 1,
+    Green      = 2,
+    Cyan       = 3,
+    Red        = 4,
+    Magenta    = 5,
+    Brown      = 6,
+    LightGray  = 7, 
+    DarkGray   = 8, 
+    LightBlue  = 9,
+    LightGreen = 10,
+    LightCyan  = 11,
+    LightRed   = 12,
+    Pink       = 13,
+    Yellow     = 14,
+    White      = 15,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -30,6 +31,6 @@ impl ColorCode {
     }
 }
 
-pub fn printb() {
+pub fn print_buf() {
 
 }
