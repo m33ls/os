@@ -18,10 +18,10 @@ qemu-system-x86_64 -drive format=raw,file=target/x86_64-os/debug/bootimage-os.bi
 ```
 
 TODO
-[ ] Rewrite / add UEFI support to bootloader crate
-[ ] Replace VGA with VESA VBE (BIOS) / GOP (UEFI)
-[ ] Input
-[ ] Filesystem
+- [ ] Rewrite / add UEFI support to bootloader crate
+- [ ] Replace VGA with VESA VBE (BIOS) / GOP (UEFI)
+- [ ] Input
+- [ ] Filesystem
 
 Useful Resources
 * [Creating an Operating System](https://wiki.osdev.org/Creating_an_Operating_System)
