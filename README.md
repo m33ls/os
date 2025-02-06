@@ -9,12 +9,19 @@ cargo bootimage
 ```
 
 Run
-```cargo run```
+```
+cargo run
+```
 or
-```qemu-system-x86_64 -drive format=raw,file=target/x86_64-os/debug/bootimage-os.bin```
+```
+qemu-system-x86_64 -drive format=raw,file=target/x86_64-os/debug/bootimage-os.bin
+```
 
 TODO
-* Rewrite / add UEFI support to bootloader crate
+[ ] Rewrite / add UEFI support to bootloader crate
+[ ] Replace VGA with VESA VBE (BIOS) / GOP (UEFI)
+[ ] Input
+[ ] Filesystem
 
 Useful Resources
 * [Creating an Operating System](https://wiki.osdev.org/Creating_an_Operating_System)
