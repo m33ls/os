@@ -29,6 +29,8 @@ fn panic(info: &PanicInfo) -> ! {
 pub extern "C" fn _start() -> ! {
     println!("Hello World!");
 
+    os::init();
+
     #[cfg(test)]
     test_main();
 
