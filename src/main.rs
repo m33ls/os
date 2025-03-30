@@ -15,7 +15,7 @@ mod serial;
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    os::hlt_loop();
 }
 
 // Print to serial on panic in test mode
@@ -36,5 +36,6 @@ pub extern "C" fn _start() -> ! {
 
     //panic!("Test message");
 
-    loop {}
+    //loop {}
+    os::hlt_loop();
 }
