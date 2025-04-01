@@ -28,7 +28,7 @@ or manually in qemu with:
 qemu-system-x86_64 -drive format=raw,file=target/x86_64-os/debug/bootimage-os.bin
 ```
 
-# TODO
+## TODO
 - [ ] UEFI
 - [ ] VESA VBE (BIOS) / GOP (UEFI)
 - [ ] Filesystem
@@ -41,7 +41,7 @@ qemu-system-x86_64 -drive format=raw,file=target/x86_64-os/debug/bootimage-os.bi
 - [x] IDT, GDT
 - [x] Handle breakpoint exceptions, double faults, page faults
 
-# Useful Resources
+## Useful Resources
 * [Creating an Operating System](https://wiki.osdev.org/Creating_an_Operating_System)
 * [Writing an OS in Rust](https://os.phil-opp.com/)
 * [osdever.net Tutorials](https://web.archive.org/web/20250123233604/http://www.osdever.net/tutorials/)
