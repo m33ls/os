@@ -39,15 +39,6 @@ unsafe fn active_level_4_table(physical_memory_offset: VirtAddr)
 }
 
 /*
-pub struct EmptyFrameAllocator;
-
-/// A FrameAllocator that always returns 'None'.
-unsafe impl FrameAllocator<Size4KiB> for EmptyFrameAllocator {
-	fn allocate_frame(&mut self) -> Option<PhysFrame> {
-		None
-	}
-}
-*/
 pub fn create_example_mapping(
 	page: Page,
 	mapper: &mut OffsetPageTable,
@@ -63,7 +54,7 @@ pub fn create_example_mapping(
 	};
 	map_to_result.expect("map_to failed").flush();
 }
-
+*/
 
 /// A FrameAllocator that returns usable frames from the bootloader's memory map.
 pub struct BootInfoFrameAllocator {

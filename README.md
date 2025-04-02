@@ -32,9 +32,9 @@ qemu-system-x86_64 -drive format=raw,file=target/x86_64-os/debug/bootimage-os.bi
 - [ ] UEFI
 - [ ] VESA VBE (BIOS) / GOP (UEFI)
 - [ ] Filesystem
-- [ ] Paging
 - [ ] Heap Allocation
 - [ ] Async / Await
+- [x] Paging
 - [x] PS/2 Keyboard
 - [x] VGA Text Mode
 - [x] Serial
