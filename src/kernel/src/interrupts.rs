@@ -1,5 +1,5 @@
 use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
-use crate::{gdt, println, print};
+use crate::gdt;
 use lazy_static::lazy_static;
 use pic8259::ChainedPics;
 use spin;
@@ -51,7 +51,7 @@ pub fn init_idt() {
 extern "x86-interrupt" fn breakpoint_handler(
     stack_frame: InterruptStackFrame)
 {
-    println!("Exception: Breakpoint\n{:#?}", stack_frame);
+    log::error!("Exception: Breakpoint\n{:#?}", stack_frame);
 }
 
 extern "x86-interrupt" fn double_fault_handler(
@@ -69,17 +69,17 @@ extern "x86-interrupt" fn page_fault_handler(
 ) {
     use x86_64::registers::control::Cr2;
 
-    println!("Exception: Page Fault");
-    println!("Accessed Adress: {:?}", Cr2::read());
-    println!("Error Code: {:?}", error_code);
-    println!("{:#?}", stack_frame);
+    log::error!("Exception: Page Fault");
+    log::error!("Accessed Adress: {:?}", Cr2::read());
+    log::error!("Error Code: {:?}", error_code);
+    log::error!("{:#?}", stack_frame);
     hlt_loop();
 }
 
 extern "x86-interrupt" fn timer_interrupt_handler(
     _stack_frame: InterruptStackFrame)
 {
-    //print!(".");
+    //log::info!(".");
 
     unsafe {
         PICS.lock()
@@ -108,8 +108,8 @@ extern "x86-interrupt" fn keyboard_interrupt_handler(
     if let Ok(Some(key_event)) = keyboard.add_byte(scancode) {
         if let Some(key) = keyboard.process_keyevent(key_event) {
             match key {
-                DecodedKey::Unicode(character) => print!("{}", character),
-                DecodedKey::RawKey(key) => print!("{:?}", key),
+                DecodedKey::Unicode(character) => log::info!("{}", character),
+                DecodedKey::RawKey(key) => log::info!("{:?}", key),
             }
         }
     }    

@@ -9,14 +9,15 @@ use bootloader_api::{BootInfo, entry_point};
 use bootloader_api::config::{BootloaderConfig, Mapping};
 //use os::println;
 
-mod vga_buffer;
+//mod vga_buffer;
+mod framebuffer;
 mod serial;
 
 // Print to VGA text buffer on panic
 #[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    println!("{}", info);
+    log::error!("{}", info);
     kernel::hlt_loop();
 }
 
@@ -45,7 +46,7 @@ fn kernel_main(boot_info: &'static mut BootInfo) -> ! {
     use x86_64::{structures::paging::{Translate, Page}, VirtAddr};
     */
 
-    println!("Hello World!");
+    log::info!("Hello World!");
     kernel::init(boot_info);
 
     /*
@@ -82,7 +83,7 @@ fn kernel_main(boot_info: &'static mut BootInfo) -> ! {
     #[cfg(test)]
     test_main();
 
-    println!("Success!");
+    log::info!("Success!");
     //panic!("Test message");
 
     //loop {}

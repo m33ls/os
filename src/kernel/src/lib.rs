@@ -7,16 +7,56 @@
 
 use core::panic::PanicInfo;
 use bootloader_api::BootInfo;
+use bootloader_api::info::FrameBufferInfo;
+use bootloader_boot_config::{BootConfig, LevelFilter};
 
 pub mod serial;
-pub mod vga_buffer;
+//pub mod vga_buffer;
+pub mod framebuffer;
 pub mod interrupts;
 pub mod gdt;
 pub mod memory;
+pub mod logger;
+
+/// Initialize a text-based logger using the given pixel-based framebuffer as output.
+pub fn init_logger(
+    framebuffer: &'static mut [u8],
+    info: FrameBufferInfo,
+    log_level: LevelFilter,
+    frame_buffer_logger_status: bool,
+    serial_logger_status: bool,
+) {
+    let logger = logger::LOGGER.get_or_init(move || {
+        logger::LockedLogger::new(
+            framebuffer,
+            info,
+            frame_buffer_logger_status,
+            serial_logger_status,
+        )
+    });
+    log::set_logger(logger).expect("logger already set");
+    log::set_max_level(convert_level(log_level));
+    log::info!("Framebuffer info: {:?}", info);
+}
+
+fn convert_level(level: LevelFilter) -> log::LevelFilter {
+    match level {
+        LevelFilter::Off => log::LevelFilter::Off,
+        LevelFilter::Error => log::LevelFilter::Error,
+        LevelFilter::Warn => log::LevelFilter::Warn,
+        LevelFilter::Info => log::LevelFilter::Info,
+        LevelFilter::Debug => log::LevelFilter::Debug,
+        LevelFilter::Trace => log::LevelFilter::Trace,
+    }
+}
 
 pub fn init(boot_info: &'static mut BootInfo) {
-    // !TODO: Initialize framebuffer
-
+    // initialize logger
+    let framebuffer = boot_info.framebuffer.take().unwrap();
+    let info = framebuffer.info();
+    let buffer = framebuffer.into_buffer(); 
+    init_logger(buffer, info, LevelFilter::Warn, true, true);
+    
     // Initialize tables and enable interrupts
     gdt::init();
     interrupts::init_idt();
@@ -55,14 +95,14 @@ where
     T: Fn(),
 {
     fn run(&self) {
-        serial_print!("{}...\t", core::any::type_name::<T>());
+        log::info!("{}...\t", core::any::type_name::<T>());
         self();
-        serial_println!("[ok]");
+        log::info!("[ok]");
     }
 }
 
 pub fn test_runner(tests: &[&dyn Testable]) {
-    serial_println!("Running {} tests", tests.len());
+    log::info!("Running {} tests", tests.len());
     for test in tests {
         test.run();
     }
@@ -70,8 +110,8 @@ pub fn test_runner(tests: &[&dyn Testable]) {
 }
 
 pub fn test_panic_handler(info: &PanicInfo) -> ! {
-    serial_println!("[failed]\n");
-    serial_println!("Error: {}\n", info);
+    log::info!("[failed]\n");
+    log::info!("Error: {}\n", info);
     exit_qemu(QemuExitCode::Failed);
     hlt_loop();
 }

@@ -1,37 +1,26 @@
-use uart_16550::SerialPort;
-use spin::Mutex;
-use lazy_static::lazy_static;
+use core::fmt;
 
-lazy_static! {
-    pub static ref SERIAL1: Mutex<SerialPort> = {
-        let mut serial_port = unsafe { SerialPort::new(0x3F8) };
-        serial_port.init();
-        Mutex::new(serial_port)
-    };
+pub struct SerialPort {
+    port: uart_16550::SerialPort,
 }
 
-#[doc(hidden)]
-pub fn _print(args: ::core::fmt::Arguments) {
-    use core::fmt::Write;
-    use x86_64::instructions::interrupts;
-
-    interrupts::without_interrupts(|| { // Don't interrupt while serial is locked
-        SERIAL1.lock().write_fmt(args).expect("Failed to print to serial");
-    });
+impl SerialPort {
+    pub unsafe fn init() -> Self {
+        let mut port = unsafe { uart_16550::SerialPort::new(0x3F8) };
+        port.init();
+        Self { port }
+    }
 }
 
-// Print to host via serial
-#[macro_export]
-macro_rules! serial_print {
-    ($($arg:tt)*) => {
-        $crate::serial::_print(format_args!($($arg)*));
-    };
+impl fmt::Write for SerialPort {
+    fn write_str(&mut self, s: &str) -> fmt::Result {
+        for char in s.bytes() {
+            match char {
+                b'\n' => self.port.write_str("\r\n").unwrap(),
+                byte => self.port.send(byte),
+            }
+        }
+        Ok(())
+    }
 }
 
-#[macro_export]
-macro_rules! serial_println {
-    () => ($crate::serial_print!("\n"));
-    ($fmt:expr) => ($crate::serial_print!(concat!($fmt, "\n")));
-    ($fmt:expr, $($arg:tt)*) => ($crate::serial_print!(
-            concat!($fmt, "\n"), $($arg)*));
-}
