@@ -6,6 +6,7 @@
 #![feature(abi_x86_interrupt)]
 
 use core::panic::PanicInfo;
+use bootloader_api::BootInfo;
 
 pub mod serial;
 pub mod vga_buffer;
@@ -13,7 +14,10 @@ pub mod interrupts;
 pub mod gdt;
 pub mod memory;
 
-pub fn init() {
+pub fn init(boot_info: &'static mut BootInfo) {
+    // !TODO: Initialize framebuffer
+
+    // Initialize tables and enable interrupts
     gdt::init();
     interrupts::init_idt();
     unsafe { interrupts::PICS.lock().initialize() };
@@ -36,7 +40,7 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
     }
 }
 
-pub fn  hlt_loop() -> ! {
+pub fn hlt_loop() -> ! {
     loop {
         x86_64::instructions::hlt();
     }
