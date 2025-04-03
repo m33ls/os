@@ -55,7 +55,7 @@ pub fn init(boot_info: &'static mut BootInfo) {
     let framebuffer = boot_info.framebuffer.take().unwrap();
     let info = framebuffer.info();
     let buffer = framebuffer.into_buffer(); 
-    init_logger(buffer, info, LevelFilter::Warn, true, true);
+    init_logger(buffer, info, LevelFilter::Trace, true, true);
     
     // Initialize tables and enable interrupts
     gdt::init();
@@ -117,15 +117,15 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
 }
 
 #[cfg(test)]
-use bootloader::{entry_point, BootInfo};
+use bootloader_api::{entry_point};
 
 #[cfg(test)]
 entry_point!(test_kernel_main);
 
 /// Entry point for `cargo test`
 #[cfg(test)]
-fn test_kernel_main(_boot_info: &'static BootInfo) -> ! {
-    init();
+fn test_kernel_main(boot_info: &'static mut BootInfo) -> ! {
+    init(boot_info);
     test_main();
     hlt_loop();
 }

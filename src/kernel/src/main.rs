@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 #![feature(custom_test_frameworks)]
-#![test_runner(os::test_runner)]
+#![test_runner(kernel::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
@@ -46,8 +46,8 @@ fn kernel_main(boot_info: &'static mut BootInfo) -> ! {
     use x86_64::{structures::paging::{Translate, Page}, VirtAddr};
     */
 
-    log::info!("Hello World!");
     kernel::init(boot_info);
+    log::info!("Hello World!");
 
     /*
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
@@ -84,7 +84,7 @@ fn kernel_main(boot_info: &'static mut BootInfo) -> ! {
     test_main();
 
     log::info!("Success!");
-    //panic!("Test message");
+    // panic!("Test message");
 
     //loop {}
     kernel::hlt_loop();
