@@ -7,15 +7,11 @@ Set current directory to use the nightly branch of rust
 ```
 rustup override set nightly
 rustup component add rust-src --toolchain nightly-x86_64-unknown-linux-gnu
-```
-Install bootimage and dependencies to link operating system
-```
-cargo install bootimage
-rustup component add llvm-tools-preview
+rustup target add x86_64_unknown-none
 ```
 Build
 ```
-cargo bootimage
+cargo build
 ```
 
 ## Run
