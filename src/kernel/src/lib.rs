@@ -36,7 +36,7 @@ pub fn init_logger(
     });
     log::set_logger(logger).expect("logger already set");
     log::set_max_level(convert_level(log_level));
-    log::info!("Framebuffer info: {:?}", info);
+    log::info!("Framebuffer info: {:?}\n", info);
 }
 
 fn convert_level(level: LevelFilter) -> log::LevelFilter {
@@ -50,9 +50,9 @@ fn convert_level(level: LevelFilter) -> log::LevelFilter {
     }
 }
 
-pub fn init(boot_info: &'static mut BootInfo) {
+pub fn init(framebuffer: bootloader_api::info::FrameBuffer) {
     // initialize logger
-    let framebuffer = boot_info.framebuffer.take().unwrap();
+    //let framebuffer = boot_info.framebuffer.take().unwrap();
     let info = framebuffer.info();
     let buffer = framebuffer.into_buffer(); 
     init_logger(buffer, info, LevelFilter::Trace, true, true);

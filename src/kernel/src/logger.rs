@@ -2,6 +2,7 @@ use crate::{framebuffer::FrameBufferWriter, serial::SerialPort};
 use bootloader_api::info::FrameBufferInfo;
 use conquer_once::spin::OnceCell;
 use core::fmt::Write;
+use core::fmt;
 use spinning_top::Spinlock;
 
 /// The global logger instance used for the `log` crate.
@@ -59,7 +60,12 @@ impl log::Log for LockedLogger {
     fn log(&self, record: &log::Record) {
         if let Some(framebuffer) = &self.framebuffer {
             let mut framebuffer = framebuffer.lock();
-            writeln!(framebuffer, "{:5}: {}", record.level(), record.args()).unwrap();
+
+            if record.level() != log::Level::Info {
+                writeln!(framebuffer, "{:5}: {}", record.level(), record.args()).unwrap();
+            } else {
+                write!(framebuffer, "{}", record.args()).unwrap();
+            }
         }
         if let Some(serial) = &self.serial {
             let mut serial = serial.lock();
@@ -68,4 +74,15 @@ impl log::Log for LockedLogger {
     }
 
     fn flush(&self) {}
+}
+
+#[macro_export]
+macro_rules! print {
+    ($($arg:tt)*) => (log::info!("{}", format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! println {
+    () => ($crate::print!("\n"));
+    ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
 }

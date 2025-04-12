@@ -7,7 +7,7 @@
 use core::panic::PanicInfo;
 use bootloader_api::{BootInfo, entry_point};
 use bootloader_api::config::{BootloaderConfig, Mapping};
-//use os::println;
+use kernel::println;
 
 //mod vga_buffer;
 mod framebuffer;
@@ -46,8 +46,11 @@ fn kernel_main(boot_info: &'static mut BootInfo) -> ! {
     use x86_64::{structures::paging::{Translate, Page}, VirtAddr};
     */
 
-    kernel::init(boot_info);
-    log::info!("Hello World!");
+    let framebuffer = boot_info.framebuffer.take().unwrap();
+
+    kernel::init(framebuffer);
+
+    println!("Hello World!");
 
     /*
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
@@ -83,7 +86,7 @@ fn kernel_main(boot_info: &'static mut BootInfo) -> ! {
     #[cfg(test)]
     test_main();
 
-    log::info!("Success!");
+    println!("Success!");
     // panic!("Test message");
 
     //loop {}
